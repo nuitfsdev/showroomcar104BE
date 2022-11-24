@@ -4,11 +4,11 @@ const Car=require('../models/car')
 
 router.get('/cars', async(req,res)=>{
     try{
-        const limit=parseInt(req.query.pageSize)
+        const limit=parseInt(req.query.pageSize) || 15;
         const skip=parseInt(req.query.pageIndex)*limit || 0;
         const filter={};
         if(req.query.ten){
-            filter.ten=req.query.ten
+            filter.ten={ "$regex": req.query.ten, "$options": "i" }
         }
         if(req.query.thuonghieu){
             filter.thuonghieu=req.query.thuonghieu
