@@ -35,7 +35,7 @@ router.post('/cars',async (req, res)=>{
         res.status(400).send(e)
     }
 })
-router.patch('/cars/:id',async(req,res)=>{
+router.put('/cars/:id',async(req,res)=>{
     const updates=Object.keys(req.body)
     const allowUpdates=["ten","thuonghieu","dongco","kichthuoc","nguongoc","vantocdoida","dungtich", "tieuhaonhienlieu","congsuatcucdai","mausac","gia","hinhanh","mota","namsanxuat"]
     const isValidOperation=updates.every((update)=>{
