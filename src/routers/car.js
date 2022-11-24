@@ -4,7 +4,16 @@ const Car=require('../models/car')
 
 router.get('/cars', async(req,res)=>{
     try{
-        const cars= await Car.find({})
+        const limit=parseInt(req.query.pageSize)
+        const skip=parseInt(req.query.pageIndex)*limit || 0;
+        const filter={};
+        if(req.query.ten){
+            filter.ten=req.query.ten
+        }
+        if(req.query.thuonghieu){
+            filter.thuonghieu=req.query.thuonghieu
+        }
+        const cars= await Car.find(filter).skip(skip).limit(limit);
         res.send(cars)
     }catch(e){
         res.status(500).send()
