@@ -33,7 +33,6 @@ router.get('/cars/:id',async (req,res)=>{
     }
 })
 router.post('/cars',async (req, res)=>{
-    //const task= new Task(req.body)
     const car= new Car({
         ...req.body
     })
