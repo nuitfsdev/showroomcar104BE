@@ -14,7 +14,8 @@ router.get('/cars', async(req,res)=>{
             filter.thuonghieu=req.query.thuonghieu
         }
         const cars= await Car.find(filter).skip(skip).limit(limit);
-        res.send(cars)
+        const totalCars=await (await Car.find({})).length;
+        res.send({cars,totalCars})
     }catch(e){
         res.status(500).send()
     }
