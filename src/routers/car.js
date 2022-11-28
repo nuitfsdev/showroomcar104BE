@@ -14,8 +14,9 @@ router.get('/cars', async(req,res)=>{
             filter.thuonghieu=req.query.thuonghieu
         }
         const cars= await Car.find(filter).skip(skip).limit(limit);
+        const totalCarsFilter=await (await Car.find(filter)).length;
         const totalCars=await (await Car.find({})).length;
-        res.send({cars,totalCars})
+        res.send({totalCars,totalCarsFilter,cars})
     }catch(e){
         res.status(500).send()
     }
@@ -26,11 +27,11 @@ router.get('/cars/:id',async (req,res)=>{
     try{
         const car= await Car.findOne({_id})
         if(!car){
-            return res.status(404).send()
+            return res.status(404).send("Not found")
         }
         res.send(car)
     }catch(e){
-        res.status(500).send()
+        res.status(500).send(e);
     }
 })
 router.post('/cars',async (req, res)=>{
