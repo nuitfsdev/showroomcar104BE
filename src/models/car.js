@@ -76,6 +76,11 @@ const carSchema=new mongoose.Schema({
         required: true,
         trim: true,
     },
+    soluong: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
 },{timestamps: true})
 const Car=mongoose.model('Car',carSchema)
 module.exports= Car
