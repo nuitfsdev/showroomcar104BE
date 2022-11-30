@@ -89,21 +89,20 @@ router.post('/users/forgotPassword', async(req,res)=>{
         }
         const token=jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET,{expiresIn: '20m'})
         user.verifyToken=token
-        console.log(user.verifyToken)
         await user.save()
         let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: 'kingspeedmail@gmail.com',
-                pass: 'ovprwckifgobfyeh'
+                user: process.env.USERMAIL,
+                pass: process.env.PASSMAIL
             },
         });
         transporter.sendMail({
-            from: "kingspeedmail@gmail.com", // sender address
+            from: process.env.USERMAIL, // sender address
             to: `${email}`, // list of receivers
             subject: "KingSpeed: Quên mật khẩu", // Subject line
             text: "Quên mật khẩu?", // plain text body
-            html: `<h3>Vui lòng truy cập link <a href="http://localhost:3001/register/${user._id}/${token}">này</a> để thiết lập lại mật khẩu. Link có thời hạn 20 phút.</h3>`, // html body
+            html: `<h3>Vui lòng truy cập link <a href="http://localhost:3001/register/${token}">này</a> để thiết lập lại mật khẩu. Link có thời hạn 20 phút.</h3>`, // html body
             },(err)=>{
                 if(err){
                     return res.send({
@@ -119,9 +118,13 @@ router.post('/users/forgotPassword', async(req,res)=>{
         res.status(500).send(e)
     }
 })
-router.put('/users/setupPassword', async(req,res)=>{
+router.put('/users/resetPassword', async(req,res)=>{
     try{
-        const user= await User.findOne({_id: req.body.id, verifyToken: req.body.verifyToken})
+        const decode=jwt.verify(req.body.verifyToken,process.env.JWT_SECRET)
+        if(!decode){
+            throw new Error("Token is expired or wrong")
+        }
+        const user= await User.findOne({_id: decode._id, verifyToken: req.body.verifyToken})
         if(!user){
             return res.status(400).send("User not exist")
         }
@@ -129,7 +132,7 @@ router.put('/users/setupPassword', async(req,res)=>{
         await user.save()
         res.status(200).send(user)
     } catch(e){
-        res.status(500).send(e)
+        res.status(500).send(e.message)
     }
 })
 
