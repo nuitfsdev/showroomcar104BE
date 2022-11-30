@@ -31,6 +31,11 @@ const userSchema= new mongoose.Schema({
         }
 
     },
+    verifyToken:{
+        type: String,
+        trim: true
+    }
+    ,
     tokens: [{
         token:{
             type: String,
@@ -53,6 +58,7 @@ userSchema.methods.toJSON=function(){
     const userObject=user.toObject()
     delete userObject.password
     delete userObject.tokens
+    delete userObject.verifyToken
     return userObject
 }
 userSchema.statics.findByCredentials=async(email,password)=>{
