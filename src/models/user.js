@@ -18,6 +18,28 @@ const userSchema= new mongoose.Schema({
             console.log(validator.isEmail(value))
         }
     },
+    mauser:{
+        type: String,
+        default: "KS0"
+    },
+    gioitinh:{
+        type: String,
+    },
+    ngaysinh:{
+        type: String,
+    },
+    sdt:{
+        type: String,
+    },
+    diachi:{
+        type: String,
+    },
+    chucvu:{
+        type: String,
+    },
+    cccd:{
+        type: String,
+    },
     password: {
         type: String,
         required: true,
@@ -83,6 +105,24 @@ userSchema.pre('save', async function(next){
     const user=this
     if(user.isModified('password')){
         user.password= await bcrypt.hash(user.password, 8)
+    }
+    if(user.isModified('role')){
+        console.log(user.role)
+        if(user.role==="employee"){
+            const mauserNumber= user.mauser.substring(2) || "0";
+            const newmauser="NV"+ Number(mauserNumber)
+            user.mauser=newmauser
+        }
+        if(user.role==="admin"){
+            const mauserNumber= user.mauser.substring(2) || "0";
+            const newmauser="AD"+ Number(mauserNumber)
+            user.mauser=newmauser
+        }
+        if(user.role==="customer"){
+            const mauserNumber= user.mauser.substring(2) || "0";
+            const newmauser="KH"+ Number(mauserNumber)
+            user.mauser=newmauser
+        }
     }
     next()
 })

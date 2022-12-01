@@ -12,6 +12,12 @@ router.get('/users/me', auth , async(req,res)=>{
 router.post('/users', async (req,res)=>{
     const user=new User(req.body)
     try{
+        if(await (await User.find({})).length!==0){
+            const userLast= await (await User.find({})).splice(-1)
+            const mauserLast= userLast[0].mauser.substring(2) || "0" 
+            const newmauser="KH"+ Number(Number(mauserLast)+1)
+            user.mauser=newmauser
+        }
         await user.save()
         const token=await user.generateAuToken()
         res.status(201).send({user,token})
@@ -71,6 +77,25 @@ router.put('/users/me',auth, async(req,res)=>{
         res.status(500).send(e)
     }
 })
+router.put('/users/role/:id', async(req,res)=>{
+    const updates=Object.keys(req.body)
+    const allowUpdates=["role"]
+    const isValidOperation=updates.every((update)=>{
+        return allowUpdates.includes(update)
+    })
+    if(!isValidOperation)
+    {
+        return res.status(400).send("error: Invalid updates!")
+    }
+    try{
+        const user= await User.findOne({_id: req.params.id})
+        user.role=req.body.role
+        await user.save()
+        res.status(200).send(user)
+    } catch(e){
+        res.status(500).send(e)
+    }
+})
 router.delete('/users/me',auth, async(req,res)=>{
     try{
         const userName=req.user.name
@@ -120,11 +145,12 @@ router.post('/users/forgotPassword', async(req,res)=>{
 })
 router.put('/users/resetPassword', async(req,res)=>{
     try{
-        const decode=jwt.verify(req.body.verifyToken,process.env.JWT_SECRET)
+        const token=req.header('Authorization').replace('Bearer ','')
+        const decode=jwt.verify(token,process.env.JWT_SECRET)
         if(!decode){
             throw new Error("Token is expired or wrong")
         }
-        const user= await User.findOne({_id: decode._id, verifyToken: req.body.verifyToken})
+        const user= await User.findOne({_id: decode._id, verifyToken: token})
         if(!user){
             return res.status(400).send("User not exist")
         }
