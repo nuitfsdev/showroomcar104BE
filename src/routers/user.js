@@ -127,7 +127,7 @@ router.post('/users/forgotPassword', async(req,res)=>{
             to: `${email}`, // list of receivers
             subject: "KingSpeed: Quên mật khẩu", // Subject line
             text: "Quên mật khẩu?", // plain text body
-            html: `<h3>Vui lòng truy cập link <a href="${process.env.URLCLIENT}/register/${token}">này</a> để thiết lập lại mật khẩu. Link có thời hạn 20 phút.</h3>`, // html body
+            html: `<h3>Vui lòng truy cập link <a href="${process.env.URLCLIENT}/${token}">này</a> để thiết lập lại mật khẩu. Link có thời hạn 20 phút.</h3>`, // html body
             },(err)=>{
                 if(err){
                     return res.send({
