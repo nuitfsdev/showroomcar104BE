@@ -4,6 +4,7 @@ const cors=require('cors')
 const carRouter=require('./routers/car')
 const userRouter=require('./routers/user')
 const newsRouter=require('./routers/news')
+const formRouter=require('./routers/form')
 
 const app = express()
 
@@ -13,6 +14,8 @@ app.use(express.json())
 app.use(carRouter)
 app.use(userRouter)
 app.use(newsRouter)
+app.use(formRouter)
+
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
