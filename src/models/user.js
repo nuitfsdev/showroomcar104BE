@@ -15,7 +15,6 @@ const userSchema= new mongoose.Schema({
             if(!validator.isEmail(value)){
                 throw new Error('Email is invalid')
             }
-            console.log(validator.isEmail(value))
         }
     },
     mauser:{
@@ -107,7 +106,6 @@ userSchema.pre('save', async function(next){
         user.password= await bcrypt.hash(user.password, 8)
     }
     if(user.isModified('role')){
-        console.log(user.role)
         if(user.role==="employee"){
             const mauserNumber= user.mauser.substring(2) || "0";
             const newmauser="NV"+ Number(mauserNumber)

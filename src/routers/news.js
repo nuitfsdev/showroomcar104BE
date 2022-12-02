@@ -40,7 +40,7 @@ router.post('/news',async (req, res)=>{
 })
 router.put('/news/:id',async(req,res)=>{
     const updates=Object.keys(req.body)
-    const allowUpdates=["link","title","image","description","dataSource","detail"]
+    const allowUpdates=["author","title","image","description","dataSource","detail"]
     const isValidOperation=updates.every((update)=>{
         return allowUpdates.includes(update)
     })

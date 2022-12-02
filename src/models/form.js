@@ -19,13 +19,13 @@ const formSchema=new mongoose.Schema({
             if(!validator.isEmail(value)){
                 throw new Error('Email is invalid')
             }
-            console.log(validator.isEmail(value))
         }
     },
     message: {
         type: String,
         trim: true,
-    }
+    },
+        
 },{timestamps: true})
 const Form=mongoose.model('Form',formSchema)
 module.exports= Form

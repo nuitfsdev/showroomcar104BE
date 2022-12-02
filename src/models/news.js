@@ -1,7 +1,7 @@
 const mongoose=require('mongoose')
 //const validator=require('validator')
 const newsSchema=new mongoose.Schema({
-    link: {
+    author: {
         type: String,
         required: true,
         trim: true,

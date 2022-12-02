@@ -1,3 +1,4 @@
+const { query } = require('express');
 const express=require('express')
 const router=new express.Router()
 const Form=require('../models/form')
@@ -6,8 +7,16 @@ router.get('/forms', async(req,res)=>{
     try{
         const limit=parseInt(req.query.pageSize) || 15;
         const skip=parseInt(req.query.pageIndex)*limit || 0;
-        const forms= await Form.find({}).skip(skip).limit(limit);
-        const totalForms=forms.length;
+        const filter={}
+        let forms= await Form.find({filter}).skip(skip).limit(limit).sort({createdAt: -1});
+        let totalForms=await (await Form.find({filter})).length;
+        if(req.query.dateForm){
+            const formsDate= await Form.find(filter)
+            const formsDateFilter=formsDate.filter((i)=>i.createdAt.toLocaleDateString("es-CL")===req.query.dateForm)
+            forms=formsDateFilter.slice(skip,skip+limit)
+            totalForms=formsDateFilter.length
+            
+        }
         res.send({totalForms,forms})
     }catch(e){
         res.status(500).send(e)
