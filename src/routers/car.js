@@ -39,6 +39,12 @@ router.post('/cars',async (req, res)=>{
         ...req.body
     })
     try{
+        if(await (await Car.find({})).length!==0){
+            const carLast= await (await Car.find({})).splice(-1)
+            const macarLast= carLast[0].macar.substring(2) || "0" 
+            const newmacar="OT"+ Number(Number(macarLast)+1)
+            car.macar=newmacar
+        }
         await car.save()
         res.status(201).send(car)
     }catch(e){

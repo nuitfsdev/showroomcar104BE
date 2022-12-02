@@ -1,6 +1,10 @@
 const mongoose=require('mongoose')
 //const validator=require('validator')
 const carSchema=new mongoose.Schema({
+    macar:{
+        type:String,
+        default: "OT00"
+    },
     ten: {
         type: String,
         required: true,

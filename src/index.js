@@ -5,6 +5,8 @@ const carRouter=require('./routers/car')
 const userRouter=require('./routers/user')
 const newsRouter=require('./routers/news')
 const formRouter=require('./routers/form')
+const hoadonRouter=require('./routers/hoadon')
+
 
 const app = express()
 
@@ -15,6 +17,8 @@ app.use(carRouter)
 app.use(userRouter)
 app.use(newsRouter)
 app.use(formRouter)
+app.use(hoadonRouter)
+
 
 
 app.use(function(req, res, next) {
