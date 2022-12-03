@@ -19,7 +19,7 @@ const userSchema= new mongoose.Schema({
     },
     mauser:{
         type: String,
-        default: "KS0"
+        default: "KH0"
     },
     gioitinh:{
         type: String,

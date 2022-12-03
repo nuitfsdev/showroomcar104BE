@@ -85,9 +85,9 @@ router.put('/users/me',auth, async(req,res)=>{
         res.status(500).send(e)
     }
 })
-router.put('/users/role/:id',authAd, async(req,res)=>{
+router.put('/users/role',authAd, async(req,res)=>{
     const updates=Object.keys(req.body)
-    const allowUpdates=["role"]
+    const allowUpdates=["email","role"]
     const isValidOperation=updates.every((update)=>{
         return allowUpdates.includes(update)
     })
@@ -96,8 +96,12 @@ router.put('/users/role/:id',authAd, async(req,res)=>{
         return res.status(400).send("error: Invalid updates!")
     }
     try{
-        const user= await User.findOne({_id: req.params.id})
+        const user= await User.findOne({email: req.body.email})
+        if(!user){
+            return res.status(404).send("Not found")
+        }
         user.role=req.body.role
+        user.tokens=[]
         await user.save()
         res.status(200).send(user)
     } catch(e){
