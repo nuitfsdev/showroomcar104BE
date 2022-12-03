@@ -16,6 +16,9 @@ router.get('/cars', async(req,res)=>{
         if(req.query.thuonghieu){
             filter.thuonghieu=req.query.thuonghieu
         }
+        if(req.query.macar){
+            filter.macar=req.query.macar
+        }
         const cars= await Car.find(filter).skip(skip).limit(limit);
         const totalCarsFilter=await (await Car.find(filter)).length;
         const totalCars=await (await Car.find({})).length;
