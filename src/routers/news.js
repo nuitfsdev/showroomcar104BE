@@ -7,7 +7,7 @@ router.get('/news', async(req,res)=>{
     try{
         const limit=parseInt(req.query.pageSize) || 5;
         const skip=parseInt(req.query.pageIndex)*limit || 0;
-        const news= await (await News.find({}).skip(skip).limit(limit)).sort({createdAt: -1});
+        const news= await News.find({}).skip(skip).limit(limit).sort({createdAt: -1});
         const totalNews=(await News.find({})).length;
         res.send({totalNews,news})
     }catch(e){
