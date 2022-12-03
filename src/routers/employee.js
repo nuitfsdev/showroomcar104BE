@@ -38,6 +38,23 @@ router.get('/users/employees/:id',authAd , async(req,res)=>{
         res.status(500).send(e)
     }
 })
+router.post('/users/employees',authAd, async (req,res)=>{
+    const user=new User(req.body)
+    try{
+        if(await (await User.find({})).length!==0){
+            const userLast= await (await User.find({})).splice(-1)
+            const mauserLast= userLast[0].mauser.substring(2) || "0" 
+            const newmauser="NV"+ Number(Number(mauserLast)+1)
+            user.mauser=newmauser
+        }
+        user.role="employee"
+        await user.save()
+        const token=await user.generateAuToken()
+        res.status(201).send({user,token})
+    } catch(e){ 
+        res.status(500).send(e)
+    }
+})
 router.put('/users/employees/:id',authAd, async(req,res)=>{
     const updates=Object.keys(req.body)
     const allowUpdates=["name","gioitinh","ngaysinh","sdt","diachi","chucvu","cccd"]
