@@ -10,8 +10,12 @@ router.get('/hoadons', async(req,res)=>{
     try{
         const limit=parseInt(req.query.pageSize) || 5;
         const skip=parseInt(req.query.pageIndex)*limit || 0;
-        const hoadons= await HoaDon.find({}).skip(skip).limit(limit);
-        const totalHoaDon=(await HoaDon.find({})).length;
+        let filter={}
+        if(req.query.tinhtrang){
+            filter.tinhtrang=req.query.tinhtrang
+        }
+        const hoadons= await HoaDon.find(filter).skip(skip).limit(limit);
+        const totalHoaDon=(await HoaDon.find(filter)).length;
         res.send({totalHoaDon, hoadons})
     }catch(e){
         res.status(500).send(e)

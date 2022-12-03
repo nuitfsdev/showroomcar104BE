@@ -3,10 +3,16 @@ const router=new express.Router()
 const User=require('../models/user')
 const auth=require('../middleware/auth')
 const nodemailer = require("nodemailer");
-const jwt=require('jsonwebtoken')
+const jwt=require('jsonwebtoken');
+const HoaDon = require('../models/hoadon');
 
 router.get('/users/me', auth , async(req,res)=>{
-    res.send(req.user)
+    try{
+        const hoadons=await HoaDon.find({makh: req.user.mauser})
+        res.send({user: req.user,hoadons})
+    }catch(e){
+        res.status(500).send(e)
+    }
 })
 
 
