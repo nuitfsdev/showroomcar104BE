@@ -5,6 +5,7 @@ const auth=require('../middleware/auth')
 const nodemailer = require("nodemailer");
 const jwt=require('jsonwebtoken');
 const HoaDon = require('../models/hoadon');
+const authAd = require('../middleware/authAd');
 
 router.get('/users/me', auth , async(req,res)=>{
     try{
@@ -84,7 +85,7 @@ router.put('/users/me',auth, async(req,res)=>{
         res.status(500).send(e)
     }
 })
-router.put('/users/role/:id', async(req,res)=>{
+router.put('/users/role/:id',authAd, async(req,res)=>{
     const updates=Object.keys(req.body)
     const allowUpdates=["role"]
     const isValidOperation=updates.every((update)=>{
@@ -119,7 +120,7 @@ router.post('/users/forgotPassword', async(req,res)=>{
         if(!user){
             return res.status(404).send("Email not exists")
         }
-        const token=jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET,{expiresIn: '20m'})
+        const token=jwt.sign({_id: user._id.toString(), role: user.role}, process.env.JWT_SECRET,{expiresIn: '20m'})
         user.verifyToken=token
         await user.save()
         let transporter = nodemailer.createTransport({

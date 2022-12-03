@@ -1,9 +1,10 @@
-const express=require('express')
+const express=require('express');
+const authAd = require('../middleware/authAd');
 const router=new express.Router()
 const User=require('../models/user')
 
 
-router.get('/users/employees', async(req,res)=>{
+router.get('/users/employees',authAd, async(req,res)=>{
     try{
         const limit=parseInt(req.query.pageSize) || 15;
         const skip=parseInt(req.query.pageIndex)*limit || 0;
@@ -26,7 +27,7 @@ router.get('/users/employees', async(req,res)=>{
         res.status(500).send(e)
     }
 })
-router.get('/users/employees/:id' , async(req,res)=>{
+router.get('/users/employees/:id',authAd , async(req,res)=>{
     try{
         const user= await User.findOne({_id: req.params.id, role: "employee"})
         if(!user){
@@ -37,7 +38,7 @@ router.get('/users/employees/:id' , async(req,res)=>{
         res.status(500).send(e)
     }
 })
-router.put('/users/employees/:id', async(req,res)=>{
+router.put('/users/employees/:id',authAd, async(req,res)=>{
     const updates=Object.keys(req.body)
     const allowUpdates=["name","gioitinh","ngaysinh","sdt","diachi","chucvu","cccd"]
     const isValidOperation=updates.every((update)=>{

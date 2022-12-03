@@ -1,4 +1,5 @@
-const express=require('express')
+const express=require('express');
+const authAd = require('../middleware/authAd');
 const router=new express.Router()
 const News=require('../models/news')
 
@@ -26,7 +27,7 @@ router.get('/news/:id',async (req,res)=>{
         res.status(500).send(e);
     }
 })
-router.post('/news',async (req, res)=>{
+router.post('/news',authAd,async (req, res)=>{
 
     const news= new News({
         ...req.body
@@ -38,7 +39,7 @@ router.post('/news',async (req, res)=>{
         res.status(400).send(e)
     }
 })
-router.put('/news/:id',async(req,res)=>{
+router.put('/news/:id',authAd,async(req,res)=>{
     const updates=Object.keys(req.body)
     const allowUpdates=["author","title","image","description","dateSource","detail"]
     const isValidOperation=updates.every((update)=>{
@@ -62,7 +63,7 @@ router.put('/news/:id',async(req,res)=>{
         res.status(500).send(e)  
     }
 })
-router.delete('/news/:id', async(req,res)=>{
+router.delete('/news/:id',authAd, async(req,res)=>{
     try{
         const news= await News.findByIdAndDelete({_id: req.params.id})
         if(!news){

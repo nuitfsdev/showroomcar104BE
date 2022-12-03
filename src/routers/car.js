@@ -1,6 +1,9 @@
-const express=require('express')
+const express=require('express');
+const authADandEP = require('../middleware/authADandEP');
+const auth=require('../middleware/auth')
 const router=new express.Router()
-const Car=require('../models/car')
+const Car=require('../models/car');
+const authAd = require('../middleware/authAd');
 
 router.get('/cars', async(req,res)=>{
     try{
@@ -34,7 +37,7 @@ router.get('/cars/:id',async (req,res)=>{
         res.status(500).send(e);
     }
 })
-router.post('/cars',async (req, res)=>{
+router.post('/cars',authAd,async (req, res)=>{
     const car= new Car({
         ...req.body
     })
@@ -51,7 +54,7 @@ router.post('/cars',async (req, res)=>{
         res.status(400).send(e)
     }
 })
-router.put('/cars/:id',async(req,res)=>{
+router.put('/cars/:id',authAd,async(req,res)=>{
     const updates=Object.keys(req.body)
     const allowUpdates=["ten","thuonghieu","socho","dongco","kichthuoc","nguongoc","vantoctoida","dungtich", "tieuhaonhienlieu","congsuatcucdai","mausac","gia","hinhanh","mota","namsanxuat","soluong"]
     const isValidOperation=updates.every((update)=>{
@@ -75,7 +78,7 @@ router.put('/cars/:id',async(req,res)=>{
         res.status(500).send(e)  
     }
 })
-router.delete('/cars/:id', async(req,res)=>{
+router.delete('/cars/:id',authAd, async(req,res)=>{
     try{
         const car= await Car.findByIdAndDelete({_id: req.params.id})
         if(!car){

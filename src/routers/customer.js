@@ -1,8 +1,9 @@
-const express=require('express')
+const express=require('express');
+const authADandEP = require('../middleware/authADandEP');
 const router=new express.Router()
 const User=require('../models/user')
 
-router.get('/users/customers', async(req,res)=>{
+router.get('/users/customers',authADandEP, async(req,res)=>{
     try{
         const limit=parseInt(req.query.pageSize) || 15;
         const skip=parseInt(req.query.pageIndex)*limit || 0;
@@ -25,7 +26,7 @@ router.get('/users/customers', async(req,res)=>{
         res.status(500).send(e)
     }
 })
-router.get('/users/customers/:id' , async(req,res)=>{
+router.get('/users/customers/:id',authADandEP , async(req,res)=>{
     try{
         const user= await User.findOne({_id: req.params.id, role: "customer"})
         if(!user){
@@ -36,7 +37,7 @@ router.get('/users/customers/:id' , async(req,res)=>{
         res.status(500).send(e)
     }
 })
-router.put('/users/customers/:id', async(req,res)=>{
+router.put('/users/customers/:id',authADandEP, async(req,res)=>{
     const updates=Object.keys(req.body)
     const allowUpdates=["name","gioitinh","ngaysinh","sdt","diachi","cccd"]
     const isValidOperation=updates.every((update)=>{
@@ -58,7 +59,7 @@ router.put('/users/customers/:id', async(req,res)=>{
     }
 })
 
-router.delete('/users/customers/:id', async(req,res)=>{
+router.delete('/users/customers/:id',authADandEP, async(req,res)=>{
     try{
         const userName= await  User.findOne({_id: req.params.id, role: "customer"})
         if(!userName){

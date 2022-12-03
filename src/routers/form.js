@@ -1,9 +1,10 @@
 const { query } = require('express');
-const express=require('express')
+const express=require('express');
+const authADandEP = require('../middleware/authADandEP');
 const router=new express.Router()
 const Form=require('../models/form')
 
-router.get('/forms', async(req,res)=>{
+router.get('/forms',authADandEP, async(req,res)=>{
     try{
         const limit=parseInt(req.query.pageSize) || 15;
         const skip=parseInt(req.query.pageIndex)*limit || 0;
@@ -23,7 +24,7 @@ router.get('/forms', async(req,res)=>{
     }
     
 })
-router.get('/forms/:id',async (req,res)=>{
+router.get('/forms/:id',authADandEP,async (req,res)=>{
     const _id=req.params.id
     try{
         const form= await Form.findOne({_id})
@@ -35,7 +36,7 @@ router.get('/forms/:id',async (req,res)=>{
         res.status(500).send(e);
     }
 })
-router.post('/forms',async (req, res)=>{
+router.post('/forms',authADandEP,async (req, res)=>{
     const form= new Form({
         ...req.body
     })
@@ -46,7 +47,7 @@ router.post('/forms',async (req, res)=>{
         res.status(400).send(e)
     }
 })
-router.delete('/forms/:id', async(req,res)=>{
+router.delete('/forms/:id',authADandEP, async(req,res)=>{
     try{
         const form= await Form.findByIdAndDelete({_id: req.params.id})
         if(!form){
