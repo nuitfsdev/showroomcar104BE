@@ -9,6 +9,7 @@ router.get('/users/me', auth , async(req,res)=>{
     res.send(req.user)
 })
 
+
 router.post('/users', async (req,res)=>{
     const user=new User(req.body)
     try{
@@ -22,7 +23,7 @@ router.post('/users', async (req,res)=>{
         const token=await user.generateAuToken()
         res.status(201).send({user,token})
     } catch(e){ 
-        res.status(400).send(e)
+        res.status(500).send(e)
     }
 })
 router.post('/users/login', async(req,res)=>{

@@ -6,6 +6,8 @@ const userRouter=require('./routers/user')
 const newsRouter=require('./routers/news')
 const formRouter=require('./routers/form')
 const hoadonRouter=require('./routers/hoadon')
+const customerRouter=require('./routers/customer')
+const employeeRouter=require('./routers/employee')
 
 
 const app = express()
@@ -18,6 +20,10 @@ app.use(userRouter)
 app.use(newsRouter)
 app.use(formRouter)
 app.use(hoadonRouter)
+app.use(customerRouter)
+app.use(employeeRouter)
+
+
 
 
 
