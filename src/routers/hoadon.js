@@ -5,6 +5,8 @@ const CTHD=require('../models/cthd')
 const Car = require('../models/car')
 const User = require('../models/user')
 const authADandEP = require('../middleware/authADandEP')
+const auth = require('../middleware/auth')
+
 
 
 router.get('/hoadons',authADandEP, async(req,res)=>{
@@ -23,7 +25,7 @@ router.get('/hoadons',authADandEP, async(req,res)=>{
     }
     
 })
-router.get('/hoadons/:id',authADandEP,async (req,res)=>{
+router.get('/hoadons/:id',auth,async (req,res)=>{
     const _id=req.params.id
     try{
         const hoadon= await HoaDon.findOne({_id})
