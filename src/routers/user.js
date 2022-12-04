@@ -66,7 +66,7 @@ router.post('/users/logoutAll', auth, async(req,res)=>{
 
 router.put('/users/me',auth, async(req,res)=>{
     const updates=Object.keys(req.body)
-    const allowUpdates=["name","password","email"]
+    const allowUpdates=["name","password","gioitinh","ngaysinh","sdt","diachi","cccd"]
     const isValidOperation=updates.every((update)=>{
         return allowUpdates.includes(update)
     })
