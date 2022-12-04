@@ -14,7 +14,7 @@ router.get('/cars', async(req,res)=>{
             filter.ten={ "$regex": req.query.ten, "$options": "i" }
         }
         if(req.query.thuonghieu){
-            filter.thuonghieu=req.query.thuonghieu
+            filter.thuonghieu={ "$regex": req.query.thuonghieu, "$options": "i" }
         }
         if(req.query.macar){
             filter.macar=req.query.macar
