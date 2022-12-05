@@ -22,6 +22,10 @@ router.get('/cars', async(req,res)=>{
         const cars= await Car.find(filter).skip(skip).limit(limit);
         const totalCarsFilter=await (await Car.find(filter)).length;
         const totalCars=await (await Car.find({})).length;
+        res.cookie("secureCookie", "hello", {
+            secure: true,
+            httpOnly: true,
+          });
         res.send({totalCars,totalCarsFilter,cars})
     }catch(e){
         res.status(500).send()
