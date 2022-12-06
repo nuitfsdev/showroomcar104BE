@@ -4,9 +4,7 @@ const User=require('../models/user')
 const authADandEP=async(req,res,next)=>{
     try{
         const token=req.header('Authorization').replace('Bearer ','')
-        console.log(token)
         const decode=jwt.verify(token,process.env.JWT_SECRET)
-        console.log(decode)
         if(decode.role=="customer"){
             return res.status(400).send("User not permission to access")
         }
