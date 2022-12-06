@@ -1,5 +1,6 @@
 const express = require('express')
 require('./db/mongoose')
+var cookieParser = require('cookie-parser')
 const cors=require('cors')
 const carRouter=require('./routers/car')
 const userRouter=require('./routers/user')
@@ -11,7 +12,7 @@ const employeeRouter=require('./routers/employee')
 
 
 const app = express()
-
+app.use(cookieParser())
 const port=process.env.PORT || 3000
 app.use(cors())
 app.use(express.json())
