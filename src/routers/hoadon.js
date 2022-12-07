@@ -75,7 +75,7 @@ router.post('/hoadons',authADandEP,async (req, res)=>{
                 macar: item.macar,
                 tenxe: car.ten,
                 soluong: item.soluong,
-                gia: item.gia
+                gia: car.gia
             })
             car.soluong=car.soluong-item.soluong
             await car.save()
