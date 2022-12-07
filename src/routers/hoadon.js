@@ -61,7 +61,7 @@ router.post('/hoadons',authADandEP,async (req, res)=>{
                return res.status(404).send(`Not found MaCar: ${item.macar}`)
             }
             if(item.soluong>car.soluong){
-               return res.status(404).send(`Not enough Car: ${item.macar}`)
+               return res.status(400).send(`Not enough Car: ${item.macar}`)
             }
                
         }
@@ -71,7 +71,8 @@ router.post('/hoadons',authADandEP,async (req, res)=>{
                 mahd: hoadon.mahd,
                 macar: item.macar,
                 tenxe: car.ten,
-                soluong: item.soluong
+                soluong: item.soluong,
+                gia: item.gia
             })
             car.soluong=car.soluong-item.soluong
             await car.save()

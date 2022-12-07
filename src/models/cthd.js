@@ -18,6 +18,10 @@ const cthdSchema=new mongoose.Schema({
     soluong: {
         type: Number,
         default: 0
+    },
+    gia: {
+        type: Number,
+        default: 0
     }
 },{timestamps: true})
 const CTHD=mongoose.model('CTHD',cthdSchema)
