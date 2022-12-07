@@ -17,6 +17,9 @@ router.get('/hoadons',authADandEP, async(req,res)=>{
         if(req.query.tinhtrang){
             filter.tinhtrang=req.query.tinhtrang
         }
+        if(req.query.mahd){
+            filter.mahd=req.query.mahd
+        }
         const hoadons= await HoaDon.find(filter).skip(skip).limit(limit);
         const totalHoaDon=(await HoaDon.find(filter)).length;
         res.send({totalHoaDon, hoadons})
