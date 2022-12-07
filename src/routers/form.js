@@ -35,7 +35,7 @@ router.get('/forms/:id',authADandEP,async (req,res)=>{
         res.status(500).send(e);
     }
 })
-router.post('/forms',authADandEP,async (req, res)=>{
+router.post('/forms',async (req, res)=>{
     const form= new Form({
         ...req.body
     })
