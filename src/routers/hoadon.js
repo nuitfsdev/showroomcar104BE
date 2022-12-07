@@ -125,16 +125,11 @@ router.delete('/hoadons/:id',authADandEP, async(req,res)=>{
             return res.status(404).send("Not found")
         }
         const cthds=await CTHD.find({mahd: hoadonDelete.mahd})
-        console.log(cthds)
         await CTHD.deleteMany({mahd: hoadonDelete.mahd})
-        console.log(hoadonDelete.mahd)
         for(var item of cthds){
-            console.log(item.macar)
             const car= await Car.findOne({macar: item.macar})
-            console.log(car.soluong)
             car.soluong=car.soluong+item.soluong
             car.save()
-            console.log(car.soluong)
         }
         res.send(hoadonDelete)
     }catch(e){
