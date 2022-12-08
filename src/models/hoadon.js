@@ -19,6 +19,7 @@ const hoadonSchema=new mongoose.Schema({
     },
     tenkh: {
         type: String,
+        default: "King Speed Customer",
         required: true,
         trim: true
     },
