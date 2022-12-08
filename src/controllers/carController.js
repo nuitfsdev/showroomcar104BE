@@ -1,9 +1,4 @@
-const express=require('express');
-const authADandEP = require('../middleware/authADandEP');
-const auth=require('../middleware/auth')
-const router=new express.Router()
 const Car=require('../models/car');
-const authAd = require('../middleware/authAd');
 
 exports.getAllCar=async(req,res)=>{
     try{

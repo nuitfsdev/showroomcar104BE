@@ -57,7 +57,7 @@ router.post('/hoadons',authADandEP,async (req, res)=>{
             const newmahoadon="HD"+ Number(Number(mahoadonLast)+1)
             hoadon.mahd=newmahoadon
         }
-        hoadon.tenkh=khachhang.ten
+        hoadon.tenkh=khachhang.name
         const cthds=req.body.cthd
         for(var item of cthds){
             const car=await Car.findOne({macar: item.macar})
