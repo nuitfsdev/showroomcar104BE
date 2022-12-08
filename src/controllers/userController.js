@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 const jwt=require('jsonwebtoken');
 const HoaDon = require('../models/hoadon');
 const authAd = require('../middleware/authAd');
-
+const emails=require('../email/resetPasswordEmail')
 exports.getUserMe=async(req,res)=>{
     try{
         const hoadons=await HoaDon.find({makh: req.user.mauser})
@@ -103,30 +103,16 @@ exports.forgotPassword=async(req,res)=>{
         const token=jwt.sign({_id: user._id.toString(), role: user.role}, process.env.JWT_SECRET,{expiresIn: '20m'})
         user.verifyToken=token
         await user.save()
-        let transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.USERMAIL,
-                pass: process.env.PASSMAIL
-            },
-        });
-        transporter.sendMail({
-            from: process.env.USERMAIL, // sender address
-            to: `${email}`, // list of receivers
-            subject: "KingSpeed: Quên mật khẩu", // Subject line
-            text: "Quên mật khẩu?", // plain text body
-            html: `<h3>Vui lòng truy cập link <a href="${process.env.URLCLIENT}/${token}">này</a> để thiết lập lại mật khẩu. Link có thời hạn 20 phút.</h3>`, // html body
-            },(err)=>{
-                if(err){
-                    return res.send({
-                        message: `Không thể gửi mail đến ${email}`,
-                        err
-                    }).status(400)
-                }
-                return res.send({
-                    message: `Đã gửi thành công cho ${email}`
-                })
-            });
+        const sendEmail=emails.resetPasswordEmail(email,token)
+        if(!sendEmail){
+            return res.send({
+                message: `Không thể gửi mail đến ${email}`,
+                err
+            }).status(400)
+        }
+        return res.send({
+            message: `Đã gửi thành công cho ${email}`
+        })
     }catch(e){
         res.status(500).send(e)
     }
