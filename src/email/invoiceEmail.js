@@ -1,12 +1,12 @@
 const nodemailer = require("nodemailer");
 const Car=require('../models/car')
 
-exports.orderEmail=async(email,hoadon,cthds)=>{
+exports.invoiceEmail=async(email,hoadon,cthds)=>{
     try{
-        let valueOrderString=``
+        let valueInvoiceString=``
         for(var item of cthds){
             const car=await Car.findOne({macar: item.macar})
-            valueOrderString=valueOrderString+`
+            valueInvoiceString=valueInvoiceString+`
             <tr style="text-align:center;">
             <td style=" border: 1px solid #ddd;" >${item.macar}</td>
             <td style=" border: 1px solid #ddd;" >${car.ten}</td>
@@ -25,10 +25,11 @@ exports.orderEmail=async(email,hoadon,cthds)=>{
     transporter.sendMail({
         from: process.env.USERMAIL, 
         to: `${email}`, 
-        subject: "KingSpeed: Đơn đặt hàng", 
-        text: "Đơn đặt hàng", 
+        subject: "KingSpeed: Hóa đơn", 
+        text: "Hóa đơn", 
         html: `<h2>King Speed xin kính chào quý khách!</h2>
-        <h3>King Speed thông báo đơn đặt hàng của quý khách như sau: </h3>
+        <h3>Cảm ơn quý khách đã mua hàng tại King Speed!</h3>
+        <h3>King Speed thông báo hóa đơn của quý khách như sau: </h3>
         <table style="margin-left: 30px;">
             <tr>
                 <th style="text-align:left">Mã đơn:</th>
@@ -63,11 +64,11 @@ exports.orderEmail=async(email,hoadon,cthds)=>{
                 <th style=" border: 1px solid #ddd;"width="100px">Số lượng</th>
             </thead>
             <tbody  style="background-color: #f2f2f2;">
-                ${valueOrderString}
+                ${valueInvoiceString}
             </tbody>
         </table>
         <h4 style="color: #0b3c86;">Tổng tiền: ${hoadon.trigia} VNĐ</h4>
-        <p style="color: red;">Quý khách vui thanh toán đơn đặt hàng trong vòng 15 ngày kể từ ngày đặt hàng.</p>
+        <h4 style="color: #035e21;">Vui lòng liên hệ Hotline 0943415138 nếu quý khách có thắc mắc về hóa đơn.</h4>
         <h3>Cảm ơn quý khách đã tin tưởng và sử dụng dịch vụ của King Speed!</h3>`
         });
         return true

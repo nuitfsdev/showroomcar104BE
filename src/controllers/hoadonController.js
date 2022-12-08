@@ -6,7 +6,9 @@ const Car = require('../models/car')
 const User = require('../models/user')
 const authADandEP = require('../middleware/authADandEP')
 const auth = require('../middleware/auth')
-const emails=require('../email/orderEmail')
+const order=require('../email/orderEmail')
+const invoice=require('../email/invoiceEmail')
+
 
 
 exports.getAllHoadons=async(req,res)=>{
@@ -69,6 +71,16 @@ exports.addHoadon=async (req, res)=>{
             }
                
         }
+        let sendEmail=false
+        if(hoadon.tinhtrang==="Chưa thanh toán"){
+            sendEmail= await order.orderEmail(khachhang.email,hoadon,cthds)
+        }
+        else{
+            sendEmail= await invoice.invoiceEmail(khachhang.email,hoadon,cthds)
+        }
+        if(!sendEmail){
+           return res.status(400).send("Can not send order email")
+        }
         for(var item of cthds){
             const car=await Car.findOne({macar: item.macar})
             const  cthd= new CTHD({
@@ -83,10 +95,6 @@ exports.addHoadon=async (req, res)=>{
             await cthd.save()
         }
         await hoadon.save()
-       const sendEmail= await emails.orderEmail(email,hoadon,cthds)
-        if(!sendEmail){
-            res.status(400).send("Can not send order email")
-        }
         res.status(201).send({hoadon,cthds})
     }catch(e){
         res.status(500).send(e.message)
@@ -113,10 +121,17 @@ exports.updateHoadon=async(req,res)=>{
         updates.forEach((update)=>{
             hoadon[update]=req.body[update]
         })
+        const khachhang=await User.findOne({mauser: hoadon.makh})
+        const cthds=await CTHD.find({mahd: hoadon.mahd})
+        const sendEmail=await invoice.invoiceEmail(khachhang.email,hoadon,cthds)
+        if(!sendEmail)
+        {
+            return res.status(400).send("Can not send invoice email")
+        }
         await hoadon.save()
         res.send(hoadon)
     } catch(e){
-        res.status(500).send(e)  
+        res.status(500).send(e.message)  
     }
 }
 exports.deleteHoadon=async(req,res)=>{
