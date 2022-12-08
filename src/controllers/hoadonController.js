@@ -6,7 +6,7 @@ const Car = require('../models/car')
 const User = require('../models/user')
 const authADandEP = require('../middleware/authADandEP')
 const auth = require('../middleware/auth')
-
+const emails=require('../email/orderEmail')
 
 
 exports.getAllHoadons=async(req,res)=>{
@@ -83,6 +83,10 @@ exports.addHoadon=async (req, res)=>{
             await cthd.save()
         }
         await hoadon.save()
+       const sendEmail= await emails.orderEmail(email,hoadon,cthds)
+        if(!sendEmail){
+            res.status(400).send("Can not send order email")
+        }
         res.status(201).send({hoadon,cthds})
     }catch(e){
         res.status(500).send(e.message)
