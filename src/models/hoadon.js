@@ -17,6 +17,11 @@ const hoadonSchema=new mongoose.Schema({
         required: true,
         trim: true,
     },
+    tenkh: {
+        type: String,
+        required: true,
+        trim: true
+    },
     ngayhd: {
         type: String,
         required: true,
