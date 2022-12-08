@@ -1,6 +1,10 @@
+const express=require('express');
+const authAd = require('../middleware/authAd');
+const router=new express.Router()
 const User=require('../models/user')
 
-exports.getAllCustomers= async(req,res)=>{
+
+exports.getAllEmployees=async(req,res)=>{
     try{
         const limit=parseInt(req.query.pageSize) || 15;
         const skip=parseInt(req.query.pageIndex)*limit || 0;
@@ -14,18 +18,18 @@ exports.getAllCustomers= async(req,res)=>{
         if(req.query.email){
             filter.email=req.query.email
         }
-        filter.role="customer"
-        const customers= await User.find(filter).skip(skip).limit(limit);
-        const totalCustomersFilter=await (await User.find(filter)).length;
-        const totalCustomers=await(await User.find(filter)).length;
-        res.send({totalCustomers,totalCustomersFilter,customers})
+        filter.role="employee"
+        const employees= await User.find(filter).skip(skip).limit(limit);
+        const totalEmployeesFilter=await (await User.find(filter)).length;
+        const totalEmployees=await(await User.find(filter)).length;
+        res.send({totalEmployees,totalEmployeesFilter,employees})
     }catch(e){
         res.status(500).send(e)
     }
 }
-exports.getCustomerByID= async(req,res)=>{
+exports.getEmployeeByID=async(req,res)=>{
     try{
-        const user= await User.findOne({_id: req.params.id, role: "customer"})
+        const user= await User.findOne({_id: req.params.id, role: "employee"})
         if(!user){
             return res.status(404).send("Not found")
         }
@@ -34,16 +38,16 @@ exports.getCustomerByID= async(req,res)=>{
         res.status(500).send(e)
     }
 }
-exports.addCustomer=async (req,res)=>{
+exports.addEmployee=async (req,res)=>{
     const user=new User(req.body)
     try{
         if(await (await User.find({})).length!==0){
             const userLast= await (await User.find({})).splice(-1)
             const mauserLast= userLast[0].mauser.substring(2) || "0" 
-            const newmauser="KH"+ Number(Number(mauserLast)+1)
+            const newmauser="NV"+ Number(Number(mauserLast)+1)
             user.mauser=newmauser
         }
-        user.role="customer"
+        user.role="employee"
         await user.save()
         const token=await user.generateAuToken()
         res.status(201).send({user,token})
@@ -51,9 +55,9 @@ exports.addCustomer=async (req,res)=>{
         res.status(500).send(e)
     }
 }
-exports.updateCustomer=async(req,res)=>{
+exports.updateEmployee=async(req,res)=>{
     const updates=Object.keys(req.body)
-    const allowUpdates=["name","gioitinh","ngaysinh","sdt","diachi","cccd"]
+    const allowUpdates=["name","gioitinh","ngaysinh","sdt","diachi","chucvu","cccd"]
     const isValidOperation=updates.every((update)=>{
         return allowUpdates.includes(update)
     })
@@ -62,7 +66,7 @@ exports.updateCustomer=async(req,res)=>{
         return res.status(400).send("error: Invalid updates!")
     }
     try{
-        const user= await User.findOne({_id: req.params.id, role: "customer"})
+        const user= await User.findOne({_id: req.params.id, role: "employee"})
         updates.forEach((update)=>{
             user[update]=req.body[update]
         })
@@ -73,9 +77,9 @@ exports.updateCustomer=async(req,res)=>{
     }
 }
 
- exports.deleteCustomer=async(req,res)=>{
+exports.deleteEmployee=async(req,res)=>{
     try{
-        const userName= await  User.findOne({_id: req.params.id, role: "customer"})
+        const userName= await User.findOne({_id: req.params.id, role: "employee"})
         if(!userName){
             return res.status(404).send("Not found")
         }
