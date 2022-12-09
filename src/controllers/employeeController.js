@@ -18,6 +18,14 @@ exports.getAllEmployees=async(req,res)=>{
         if(req.query.email){
             filter.email=req.query.email
         }
+        if(req.query.search){
+            if(req.query.search.startsWith("NV",0)){
+                filter.mauser=req.query.search
+            }
+            else{
+                filter.name={ "$regex": req.query.search, "$options": "i" }
+            }
+        }
         filter.role="employee"
         const employees= await User.find(filter).skip(skip).limit(limit);
         const totalEmployeesFilter=await (await User.find(filter)).length;

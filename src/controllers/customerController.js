@@ -14,6 +14,14 @@ exports.getAllCustomers= async(req,res)=>{
         if(req.query.email){
             filter.email=req.query.email
         }
+        if(req.query.search){
+            if(req.query.search.startsWith("KH",0)){
+                filter.mauser=req.query.search
+            }
+            else{
+                filter.name={ "$regex": req.query.search, "$options": "i" }
+            }
+        }
         filter.role="customer"
         const customers= await User.find(filter).skip(skip).limit(limit);
         const totalCustomersFilter=await (await User.find(filter)).length;

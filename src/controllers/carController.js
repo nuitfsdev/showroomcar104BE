@@ -14,6 +14,14 @@ exports.getAllCar=async(req,res)=>{
         if(req.query.macar){
             filter.macar=req.query.macar
         }
+        if(req.query.search){
+            if(req.query.search.startsWith("OT",0)){
+                filter.macar=req.query.search
+            }
+            else{
+                filter.ten={ "$regex": req.query.search, "$options": "i" }
+            }
+        }
         const cars= await Car.find(filter).skip(skip).limit(limit);
         const totalCarsFilter=await (await Car.find(filter)).length;
         const totalCars=await (await Car.find({})).length;
