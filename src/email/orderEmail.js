@@ -10,7 +10,7 @@ exports.orderEmail=async(email,hoadon,cthds)=>{
             <tr style="text-align:center;">
             <td style=" border: 1px solid #ddd;" >${item.macar}</td>
             <td style=" border: 1px solid #ddd;" >${car.ten}</td>
-            <td style=" border: 1px solid #ddd;" >${car.gia} VNĐ</td>
+            <td style=" border: 1px solid #ddd;" >${car.gia.toLocaleString()} VNĐ</td>
             <td style=" border: 1px solid #ddd;" >${item.soluong}</td>
             </tr>
             `
@@ -66,7 +66,7 @@ exports.orderEmail=async(email,hoadon,cthds)=>{
                 ${valueOrderString}
             </tbody>
         </table>
-        <h4 style="color: #0b3c86;">Tổng tiền: ${hoadon.trigia} VNĐ</h4>
+        <h4 style="color: #0b3c86;">Tổng tiền: ${hoadon.trigia.toLocaleString()} VNĐ</h4>
         <p style="color: red;">Quý khách vui thanh toán đơn đặt hàng trong vòng 15 ngày kể từ ngày đặt hàng.</p>
         <h3>Cảm ơn quý khách đã tin tưởng và sử dụng dịch vụ của King Speed!</h3>`
         });
