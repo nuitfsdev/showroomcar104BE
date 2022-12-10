@@ -22,6 +22,9 @@ exports.getAllCar=async(req,res)=>{
                 filter.ten={ "$regex": req.query.search, "$options": "i" }
             }
         }
+        if(req.query.advice){
+            filter.advice=req.query.advice
+        }
         const cars= await Car.find(filter).skip(skip).limit(limit);
         const totalCarsFilter=await (await Car.find(filter)).length;
         const totalCars=await (await Car.find({})).length;
@@ -62,7 +65,7 @@ exports.addCar=async (req, res)=>{
 }
 exports.updateCar=async(req,res)=>{
     const updates=Object.keys(req.body)
-    const allowUpdates=["ten","thuonghieu","socho","dongco","kichthuoc","nguongoc","vantoctoida","dungtich", "tieuhaonhienlieu","congsuatcucdai","mausac","gia","hinhanh","mota","namsanxuat","soluong"]
+    const allowUpdates=["ten","thuonghieu","socho","dongco","kichthuoc","nguongoc","vantoctoida","dungtich", "tieuhaonhienlieu","congsuatcucdai","mausac","gia","hinhanh","mota","namsanxuat","soluong","advice"]
     const isValidOperation=updates.every((update)=>{
         return allowUpdates.includes(update)
     })
